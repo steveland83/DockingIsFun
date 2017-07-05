@@ -1,8 +1,16 @@
-FROM microsoft/aspnetcore-build:1.0-1.1
-ARG source
+FROM microsoft/dotnet:1.1-sdk AS build-env
 WORKDIR /app
-EXPOSE 80
-RUN ["dotnet", "restore DockingIsFun"]
-RUN ["dotnet", "build DockingIsFun"]
-COPY ${source:-obj/Docker/publish} .
+
+# copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+# build runtime image
+FROM microsoft/dotnet:1.1-runtime 
+WORKDIR /app
+COPY --from=build-env /app/out ./
 ENTRYPOINT ["dotnet", "DockingIsFun.dll"]
