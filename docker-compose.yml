@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  dockingisfun:
+    image: dockingisfun
+    build:
+      context: ./DockingIsFun
+      dockerfile: Dockerfile
