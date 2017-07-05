@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  ci-build:
+    image: microsoft/aspnetcore-build:1.0-1.1
+    volumes:
+      - .:/DockingIsFun
+    working_dir: /DockingIsFun
+    command: /bin/bash  -c "ls -a && dotnet restore ./src/DockingIsFun.sln && dotnet publish ./src/DockingIsFun.sln -c Release -o ./src/obj/Docker/publish"
